@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>402vibe.fun — Autopay for On-chain Music</title>
+  <meta name="description" content="Tokenize your vibe. Let fans invest in music and pay-per-play via Only402 layered over Jito Tip on Solana. Live verifiable royalty streams and architecture." />
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <link rel="preload" href="./styles.css" as="style" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="light">
+  <div class="bg-grid"></div>
+
+  <header class="nav light">
+    <div class="nav__left">
+      <span class="brand">402vibe.fun</span>
+      <span class="badge online"><span class="dot"></span> System Online</span>
+    </div>
+    <nav class="nav__right">
+      <a href="#why">Why</a>
+      <a href="#arch">Architecture</a>
+      <a href="#live">Live Royalties</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn ghost" href="https://x.com/402vibe_fun" target="_blank" rel="noopener">Twitter</a>
+      <a class="btn ghost" href="https://pump.fun/" target="_blank" rel="noopener">Pump.fun</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="pill">Tokenize your vibe • Only402 over <b>Jito Tip</b> • Solana Mainnet</div>
+      <h1>Autopay for Music, Fans & APIs</h1>
+      <p class="sub">Fans <b>invest</b> in tracks, artists <b>earn</b> what they’re worth — with on-chain pay-per-play and verifiable splits baked into HTTP.</p>
+      <div class="cta">
+        <a class="btn" href="https://solscan.io/account/ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt#transfers" target="_blank" rel="noopener">View Live TXs on Solscan</a>
+        <a class="btn ghost" href="#arch">See Architecture</a>
+      </div>
+    </section>
+
+    <!-- VALUE PROPS -->
+    <section class="cards-3" id="why">
+      <div class="card feature">
+        <h4>Frictionless</h4>
+        <p>No accounts, no API keys. A single <code>Only402-Pay</code> header does per-request royalties for players, apps and agents.</p>
+      </div>
+      <div class="card feature">
+        <h4>Fair & Instant</h4>
+        <p>Solana + Jito priority fees ⇒ sub-second paths and low cost. Every play pays, instantly, on-chain.</p>
+      </div>
+      <div class="card feature">
+        <h4>Verifiable Splits</h4>
+        <p>Label, artist, producer? Split trees settle on-chain. We stream live transactions below.</p>
+      </div>
+    </section>
+
+    <!-- PROS & CONS -->
+    <section class="cards-2" id="proscons">
+      <div class="card">
+        <h3>What you get</h3>
+        <ul class="list">
+          <li>On-chain Spotify-style payouts.</li>
+          <li>Micropayment-friendly per-play pricing.</li>
+          <li>Programmable splits, caps & routing.</li>
+          <li>Transparent accounting via public RPC.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Trade-offs</h3>
+        <ul class="list">
+          <li>Public RPC rate limits apply.</li>
+          <li>End users need a wallet or managed signer.</li>
+          <li>Latency can vary with network congestion.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section class="cards-3" id="arch">
+      <div class="card feature">
+        <div class="emoji">🎧</div>
+        <h4>Client / Player</h4>
+        <p>HTTP request with signed <code>Only402-Pay</code> header. The player handles retries & batching while a track streams.</p>
+      </div>
+      <div class="card feature">
+        <div class="emoji">🧠</div>
+        <h4>Payment Router</h4>
+        <p>Chooses route (Jito Tip / priority fee), verifies proof, applies split tree and forwards to the music API.</p>
+      </div>
+      <div class="card feature">
+        <div class="emoji">💿</div>
+        <h4>Settlement</h4>
+        <p>On-chain confirmation + webhooks + receipts. Each play leaves a verifiable trail for fans & artists.</p>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="steps">
+      <div class="step"><span class="num">1</span><div>Player starts a track and sends <code>Only402-Pay</code> per chunk/second.</div></div>
+      <div class="step"><span class="num">2</span><div>Router tips via Jito, sets priority fees and validates receipt.</div></div>
+      <div class="step"><span class="num">3</span><div>Music API streams audio; split tree allocates shares on-chain.</div></div>
+      <div class="step"><span class="num">4</span><div>Tx appears in the live feed as royalty micro-payouts.</div></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="card header" id="settings">
+      <div class="controls">
+        <label>RPC (HTTPS):
+          <input id="rpcHttp" value="https://api.mainnet-beta.solana.com"/>
+        </label>
+        <label>Tip Accounts:
+          <input id="tipAccounts" value="ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt" />
+        </label>
+        <label class="inline"><input type="checkbox" id="auto" checked/> Auto-refresh (5s)</label>
+      </div>
+      <div class="small muted">We use <code>getSignaturesForAddress</code> (merged across tip accounts) and resolve each new signature with <code>getTransaction</code> to show status & effective fee. Starts automatically.</div>
+    </section>
+
+    <!-- LIVE TABLE -->
+    <section class="table-wrap" id="live">
+      <div class="table-head">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <h3>Live Royalties</h3>
+          <span class="muted">Streaming via HTTPS polling (public RPC friendly)</span>
+          <div class="throughput">Total routed: <span id="totalSol">0.350000</span> SOL • <span id="totalUsd">$69.69</span></div>
+        </div>
+      </div>
+      <table class="tx-table">
+        <thead>
+          <tr>
+            <th>Signature</th>
+            <th>Time</th>
+            <th>Action</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Value</th>
+            <th>Token</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <!-- rows injected -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FAQ -->
+    <section class="cards-2" id="faq">
+      <div class="card">
+        <h4>Why not WebSockets?</h4>
+        <p>Many public endpoints block <code>logsSubscribe</code> in browsers (CORS / rate limits). HTTPS polling stays robust without a private RPC.</p>
+      </div>
+      <div class="card">
+        <h4>Can I bring my own RPC?</h4>
+        <p>Yes. Paste any HTTPS RPC in settings; the feed restarts automatically. For production, use a pooled provider.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="foot">
+        <div class="muted">© 2025 402vibe.fun — tokenize your vibe • on-chain pay-per-play</div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
